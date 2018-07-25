@@ -10,6 +10,6 @@ fi
 # Build base alpine-node:latest image
 $build_cmd \
   --rm \
-  -t bc-ipfs \
-  --file Dockerfile \
+  -t bc-ipfs-dev \
+  --file Dockerfile.dev \
   .

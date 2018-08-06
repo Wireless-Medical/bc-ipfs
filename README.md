@@ -78,6 +78,7 @@ in the startup script for ipfs.
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
 ```
+
 See: https://github.com/INFURA/tutorials/wiki/IPFS-and-CORS for an example
 on `API.HTTPHeaders.Access-Control-Allow-Origin` and read https://github.com/ipfs/js-ipfs-api#cors
 for more detail info on `CORS`.

@@ -4,10 +4,22 @@ The purpose for this started to simply provide a module to integrate with blockc
 related applications. Block chain is not limited to Ethereum, but also refer to others if applicable
 in the sense to integrate with IPFS.
 
+*Require docker engine 1.13+ or docker-ce 17.0+*
+
 # How to Build and Run
 To build the docker images locally, run the following 2 in sequence.
 ```
+# Build alpine+nodejs and golang runtime based on alpine+nodejs image
 ./build-alpine-go-node.sh
+# Build dev env with npm packages, ipfs, etc.
+./build.sh
+```
+
+or if you want to use an existing alpine image e.g. `mhart/alpine-node:base-10.8`
+```
+# Only build the golang runtime
+./build-go-node.sh
+# Build dev env with npm packages, ipfs, etc.
 ./build.sh
 ```
 
@@ -51,4 +63,54 @@ ipfs daemon &
 `localhost:3000`.
 ```
 npm start
+```
+
+# Just looking for an IPFS image to run IPFS?
+
+Kick off the following script, an image `go-ipfs-insecure` will be provided.
+```
+./build-insecure-ipfs.sh
+```
+
+It simply applies the *insecure* config by default to accept ALL incoming http request
+in the startup script for ipfs.
+```
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"*\"]"
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials "[\"true\"]"
+```
+See: https://github.com/INFURA/tutorials/wiki/IPFS-and-CORS for an example
+on `API.HTTPHeaders.Access-Control-Allow-Origin` and read https://github.com/ipfs/js-ipfs-api#cors
+for more detail info on `CORS`.
+
+See https://github.com/ipfs/go-ipfs for more details on how to run this container. A
+quick example here show syou how to kick it off.
+
+`/data/ipfs` and `/export` are inside the container and no data will be preserved
+when the container is terminated.
+```
+docker run  \
+  --rm \
+  -d --name insecure-ipfs-test \
+  -p 4001:4001 \
+  -p 127.0.0.1:8080:8080 \
+  -p 127.0.0.1:5001:5001 \
+  go-ipfs-insecure
+```
+
+The following grant access via `docker volume` to your local host filesystem to preserve
+`/data/ipfs` and `/export`.
+```
+export ipfs_staging=</absolute/path/to/somewhere/>
+# To preserve ipfs data on your localhost
+export ipfs_data=</absolute/path/to/somewhere_else/>
+# This run as user root, be careful. port 4001 is bind to ALL interfaces
+docker run \
+  --rm \
+  -d --name insecure-ipfs-test \
+  -v $ipfs_staging:/export \
+  -v $ipfs_data:/data/ipfs \
+  -p 4001:4001 \
+  -p 127.0.0.1:8080:8080 \
+  -p 127.0.0.1:5001:5001 \
+  go-ipfs-insecure
 ```

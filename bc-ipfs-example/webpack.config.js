@@ -10,6 +10,10 @@ module.exports = {
     'webpack/hot/only-dev-server',
     './src/index'
   ],
+  devServer: {
+    host: '0.0.0.0',
+    disableHostCheck: true
+  }, 
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.js',

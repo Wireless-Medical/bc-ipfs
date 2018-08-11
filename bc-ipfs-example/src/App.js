@@ -1,6 +1,6 @@
-'use esversion: 6';
-const React = require('react');
-const ipfsAPI = require('ipfs-api');
+'use strict'
+const React = require('react')
+const ipfsAPI = require('ipfs-api')
 
 class App extends React.Component {
   constructor () {
@@ -11,9 +11,9 @@ class App extends React.Component {
     this.ipfsApi = ipfsAPI('127.0.0.1', '5001')
 
     // bind methods
-    this.captureFile = this.captureFile.bind(this);
-    this.saveToIpfs = this.saveToIpfs.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.captureFile = this.captureFile.bind(this)
+    this.saveToIpfs = this.saveToIpfs.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   captureFile (event) {

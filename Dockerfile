@@ -36,14 +36,14 @@ ENV IPFS_VERSION=0.4.15 \
 #     && bash install.sh
 
 # add to image and unzip it 
-COPY ./bc-ipfs-example.tar.gz $HOME/
+COPY ./bc-ipfs-example $HOME/bc-ipfs-example
 
 # Install go-ipfs and gx
 RUN source /etc/profile.d/go_path.sh && \
     go get -u -d github.com/ipfs/go-ipfs && cd $GOPATH/src/github.com/ipfs/go-ipfs && \
     make install_unsupported ; \
     chown -R $IPFS_UID:$IPFS_GID $HOME && \
-    cd $HOME/ ; tar -xzf bc-ipfs-example.tar.gz && chown -R $IPFS_UID:$IPFS_GID $HOME/bc-ipfs-example
+    chown -R $IPFS_UID:$IPFS_GID $HOME/bc-ipfs-example
 
 USER $IPFS_UID
 

@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 const path = require('path');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
@@ -14,7 +15,8 @@ module.exports = {
   devServer: {
     contentBase: './public',
     port: 3000,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    disableHostCheck: true
   },
   module: {
     rules: [

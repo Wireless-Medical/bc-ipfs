@@ -16,8 +16,12 @@
   "author": "Andrew Lee <info@blcksync.com>",
   "license": "ISC",
   "dependencies": {
+    "ipfs-api": "^23.0.0",
+    "jquery": "^3.3.1",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.4.1",
+    "web3": "^1.0.0-beta.35"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

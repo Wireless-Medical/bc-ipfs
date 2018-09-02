@@ -13,6 +13,7 @@ WORKDIR /root
 
 RUN apk update && apk upgrade && \
     apk add --no-cache bash git \
+    busybox-extras \
     python \
     python-dev \
     py-pip \

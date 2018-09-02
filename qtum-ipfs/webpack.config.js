@@ -1,6 +1,6 @@
-/* jshint esversion: 6 */
+/*jshint esversion: 6 */
 const path = require('path');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: 'development',
@@ -24,7 +24,7 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
+          loader: "babel-loader"
         }
       },
       {
@@ -35,7 +35,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|svg|jpg|gif|woff|woff2|eot|ttf)$/,
+        test: /\.(png|svg|jpg|gif)$/,
         use: [
           'file-loader'
         ]
@@ -44,9 +44,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: './src/index.html',
-      filename: './index.html',
-      inject: 'body'
+      template: "./src/index.html",
+      filename: "./index.html"
     })
   ]
 };

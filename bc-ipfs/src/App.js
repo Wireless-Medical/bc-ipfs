@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 import './App.css';
 import { Button, Form, Grid } from 'react-bootstrap';
 
-import ipfs from './ipfs';
+import lib_ipfs from './lib_ipfs';
+import lib_web3 from './lib_web3';
 
 class App extends Component {
   constructor () {
@@ -28,9 +29,10 @@ class App extends Component {
     let ipfsId;
     let fsize;
     const tmp_iqueue = this.ipfshash_queue;
+    const dqueue = this.idx_queue;
     const buffer = Buffer.from(reader.result);
 
-    ipfs.add(buffer, { progress: (prog) => console.log(`IPFS uploaded bytes: ${prog}`) })
+    lib_ipfs.add(buffer, { progress: (prog) => console.log(`IPFS uploaded bytes: ${prog}`) })
       .then((response) => {
         console.log(response);
         ipfsId = response[0].hash;
@@ -38,8 +40,10 @@ class App extends Component {
         console.log('ipfs hash=' + ipfsId);
         console.log('ipfs fsize=' + fsize);
         tmp_iqueue[idx] = ipfsId;
+        dqueue.push(reader.name);
       }).catch((err) => {
         console.error(err);
+        dqueue[idx] = nil;
       });
   }
 
@@ -57,10 +61,8 @@ class App extends Component {
       }
       else {
         let f = event.target.files[i];
-        let idx = 0;
-        dqueue.push(f.name);
         tmp_fqueue.push(f);
-        idx = tmp_fqueue.indexOf(f, 0);
+        let idx = tmp_fqueue.indexOf(f, 0);
         console.log('Queuing file ' + f.name + ' at index=' + idx);
         // register index for each file and upload order properly
         // TODO: will take up lots of memory for multiple files since we pre-load them all into memory
@@ -73,15 +75,24 @@ class App extends Component {
     }
   }
 
+  /* jshint ignore:start */
   registerToBC (event) {
     event.preventDefault();
     const tmp_fqueue = this.file_queue;
     const tmp_iqueue = this.ipfshash_queue;
+    try {
+      const accounts = lib_web3.eth.getAccounts();
+      console.log('Applying eth account: ' + accounts[0]);
+    }
+    catch(error) {
+      console.log(error);
+    }
     for(let i = 0; i < tmp_fqueue.length; i++) {
       console.log('Submitted file=' + tmp_fqueue[i].name);
       console.log('IPFS recprd=https://ipfs.io/ipfs/' + tmp_iqueue[i]);
     }
   }
+  /* jshint ignore:end */
 
   /* jshint ignore:start */
   render() {

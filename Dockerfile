@@ -86,7 +86,9 @@ RUN addgroup -g $IPFS_GID $IPFS_USER && \
     chown -R $IPFS_UID:$IPFS_GID $HOME && \
     chown -R $IPFS_UID:$IPFS_GID /usr/local/bin/geth && \
     chown -R $IPFS_UID:$IPFS_GID /usr/local/go/bin/* && \
-    chown -R $IPFS_UID:$IPFS_GID /go/bin/*
+    chown -R $IPFS_UID:$IPFS_GID /go/bin/* && \
+    mkdir -p $HOME/ipfs && chown -R $IPFS_UID:$IPFS_GID $HOME/ipfs ; \
+    echo "export IPFS_PATH=$HOME/ipfs" > /etc/profile.d/ipfs_path.sh
 
 ENV IPFS_VERSION=0.4.15 \
     IPFS_SHA256=48a81cfc34d3a12c8563dbdfae8681be6e4d23c0664d6a192bc2758c4e4ef377
@@ -102,9 +104,35 @@ RUN mkdir $HOME/bin && \
     bn.js@4.11.8 \
     secp256k1@3.4.0 \
     debug@3.1.0 \
-    ipfs-api@22.2.4 \
+    ipfs-api@26.1.2 \
     dat@13.10.0 \
     && ln -s $HOME/node_modules/dat/bin/cli.js $HOME/bin/dat ;
+
+RUN cd $HOME; \
+    npm install -S react@16.6.1 \
+    @types/react@16.7.3 \
+    crypto-js@3.1.9-1 \
+    ethereumjs-tx@1.3.7 \
+    ipfs-api@26.1.2 \
+    jquery@3.3.1 \
+    js-sha256@0.9.0 \
+    react-bootstrap@0.32.4 \
+    react-dom@16.6.1 \
+    url-parse@1.4.4 \
+    web3@1.0.0-beta.36 \
+    && npm install -S @types/react-dom@16.0.9 \
+    babel-core@6.26.3 \
+    babel-loader@7.1.5 \
+    babel-preset-env@1.7.0 \
+    babel-preset-react@6.24.1 \
+    css-loader@1.0.1 \
+    file-loader@1.1.11 \
+    html-loader@0.5.5 \
+    html-webpack-plugin@3.2.0 \
+    style-loader@0.21.0 \
+    webpack@4.25.1 \
+    webpack-cli@3.1.2 \
+    webpack-dev-server@3.1.10 
 
 COPY ./bin/*.sh $HOME/bin/
 

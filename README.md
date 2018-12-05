@@ -4,9 +4,58 @@ The purpose for this started to simply provide a module to integrate with blockc
 related applications. Block chain is not limited to Ethereum, but also refer to others if applicable
 in the sense to integrate with IPFS.
 
-*Require docker engine 1.13+ or docker-ce 17.0+*
+If you are using Docker: *Require docker engine 1.13+ or docker-ce 17.0+*
+If you are running locally on your laptop: Require *nodejs 8.14.0+* and *npm 6.4.0+*
+```
+# npm -v
+6.4.1
+# node -v
+v8.14.0
+```
+
+The following branches are locked for several purposes. This current `master` branch is the development branch
+and the current stable one is `encryption-v0.3`. All development should be based on `master` and refer to
+`encryption-v0.3` for now.
+
+* `master` - new for development including new features, etc.
+* `encryption-v0.3` - stable, and backport features and PR from master if necessary
+* `encryption-v0.2` - old, stable, only for old version and compatibility test.
+* `encryption-v0.1` - old, don't use, just for reference.
 
 # How to Build and Run
+
+## Local Unix/Laptop
+
+* Mac
+
+```
+# Install nodejs and npm
+brew install node
+# You can also download it from https://nodejs.org/en/
+# Run this project
+git clone -b master https://github.com/blcksync/bc-ipfs.git bc-ipfs
+cd bc-ipfs
+cd bc-ipfs
+npm install
+npm start
+```
+
+* Ubuntu 16.04+
+
+```
+# Install nodejs and npm
+sudo su - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo su - apt-get install -y nodejs
+# Run this project
+git clone -b master https://github.com/blcksync/bc-ipfs.git bc-ipfs
+cd bc-ipfs
+cd bc-ipfs
+npm install
+npm start
+```
+
+## Docker
+
 To build the docker images locally, run the following 2 in sequence.
 ```
 # Build alpine+nodejs and golang runtime based on alpine+nodejs image
@@ -14,9 +63,10 @@ To build the docker images locally, run the following 2 in sequence.
 # This produce an image with tag 'blcksync/alpine-node:latest' along with a
 # go-lang 1.11.x image including npm
 GO_VER=11 ./build-alpine-go-node.sh
-# Build dev env with npm packages, ipfs, etc.
+# Build dev env with npm packages, ipfs, etc. and run it with run-dev.sh
 ./build-dev.sh
-# Build a ready to run image without development libs and tools
+# Build a ready to run image without development libs and tools and run it
+# with run-prod.sh or run.sh
 ./build.sh
 ```
 
@@ -30,31 +80,35 @@ GO_VER=11 ALPINE_IMAGE="mhart/alpine-node:base-10.8" ./build-go-node.sh
 ./build.sh
 ```
 
-To run the image `bc-ipfs`, just invoke `run.sh`
+To run the image `bc-ipfs-<BRANCHNAME>`, just invoke `run.sh`
 ```
 ./run.sh
 ```
-or to kick off the dev image `bc-ipfs-dev`, just invoke `run-dev.sh`.
+or to kick off the dev image `bc-geth-ipfs-dev-11`, just invoke `run-dev.sh`.
 ```
-# Build the dev image first
+# Build the dev image first. The dev image does not care about the current
+# bc-ipfs source code and branch. It is agnostic and only provides a run-time
+# environment for bc-ipfs code.
 ./build-dev.sh
-# Run the dev image bc-ipfs-dev in container
+# Run the dev image bc-geth-ipfs-dev in container. This mounts the bc-ipfs
+# directory from the host into the container.
 ./run-dev.sh
 ```
-This kicks off a container that `mount` the directory `bc-ipfs-example`
+This kicks off a container that `mount` the directory `bc-ipfs`
 into the container if you want to dynamically make changes and verify
-it from the browser directly without re-building a release image. This
-is designed for development and convinience. However, this expose a risk
+it from the browser directly without re-building a release image every time.
+This is designed for development and convenience. However, this exposes a risk
 since you may be installing random libraries and npm modules into the container
-and running them. Make sure your container is not being exploited and
-ensure you are only running the container as a non-privilege user.
+and running them which will go back to your host's `node_modules` directory.
+Make sure your container is not being exploited and ensure you are only running
+the container as a non-privilege user.
 e.g. `USER $IPFS_UID` when you launch the container. This is the default
 user created along with the image.
 
-Within the container, invoke the following command:
+Within the development container `bc-geth-ipfs-dev-11`, invoke the following command:
 * `npm` installation
 ```
-cd bc-ipfs-example
+cd bc-ipfs
 npm install
 ```
 * `ipfs` init and start
@@ -78,6 +132,8 @@ npm start
 # Just looking for an IPFS image to run IPFS?
 
 Kick off the following script, an image `go-ipfs-insecure` will be provided.
+We use the community images from https://hub.docker.com/r/ipfs/go-ipfs/ and provide
+a simple script to kick it off for you.
 ```
 ./build-insecure-ipfs.sh
 ```
@@ -101,10 +157,10 @@ when the container is terminated.
 ```
 docker run  \
   --rm \
-  -d --name insecure-ipfs-test \
+  -d --name go-ipfs-insecure-ipfs-test \
   -p 4001:4001 \
-  -p 127.0.0.1:8080:8080 \
-  -p 127.0.0.1:5001:5001 \
+  -p 8080:8080 \
+  -p 5001:5001 \
   go-ipfs-insecure
 ```
 
@@ -117,13 +173,18 @@ export ipfs_data=</absolute/path/to/somewhere_else/>
 # This run as user root, be careful. port 4001 is bind to ALL interfaces
 docker run \
   --rm \
-  -d --name insecure-ipfs-test \
+  -d --name go-ipfs-insecure-ipfs-test \
   -v $ipfs_staging:/export \
   -v $ipfs_data:/data/ipfs \
   -p 4001:4001 \
-  -p 127.0.0.1:8080:8080 \
-  -p 127.0.0.1:5001:5001 \
+  -p 8080:8080 \
+  -p 5001:5001 \
   go-ipfs-insecure
+```
+
+To stop the container, simply use the following command:
+```
+docker stop $(docker ps -f "NAME=go-ipfs-insecure-ipfs-test" --format "{{.ID}}")
 ```
 
 # Setup development environment and standard
@@ -160,7 +221,8 @@ npm install -S react@16.6.1 \
   react-bootstrap@0.32.4 \
   react-dom@16.6.1 \
   url-parse@1.4.4 \
-  web3@1.0.0-beta.36
+  web3@1.0.0-beta.36 \
+  whatwg-fetch@3.0.0
 ```
 
 **Development Only**

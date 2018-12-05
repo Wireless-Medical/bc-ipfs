@@ -9,14 +9,17 @@ module.exports = {
   ],
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/'
   },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './public',
     port: 3000,
     host: '0.0.0.0',
-    disableHostCheck: true
+    disableHostCheck: true,
+    headers: { "Access-Control-Allow-Origin": "*" },
+    historyApiFallback: true,
   },
   module: {
     rules: [

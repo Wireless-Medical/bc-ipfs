@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
+import { div18decimals } from '../utils/lib_token';
 var PropTypes = require('prop-types');
 
-const getTokens = value => {
-  var decimals = 18;
-  /* jshint ignore:start */
-  var eth_to_wei = new BigNumber(10 ** decimals);
-  /* jshint ignore:end */
-  let token_cost = new BigNumber(value).div(eth_to_wei).toNumber();
-  return token_cost;
-};
-
 /*jshint ignore:start*/
-const BMDTokens = ({ value }) => <span>{getTokens(value)}</span>;
+const BMDTokens = ({ value }) => <span>{div18decimals(value)}</span>;
 /*jshint ignore:end*/
 
 BMDTokens.propTypes = {

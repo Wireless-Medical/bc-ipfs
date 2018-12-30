@@ -3,9 +3,7 @@
 // run with local Provider
 import lib_web3 from './lib_web3';
 
-// contract address 0xFDfc371c17192C4363d5e69Ff9FE3F06c84046dA ABI on Rinkeby
-// contract address 0x731834811e738Ea41338b00F8A1801a9958cB4b5 ABI on Ropstan Testnet
-const address = '0x731834811e738Ea41338b00F8A1801a9958cB4b5';
+const address = CONFIG.ethereum.reward_contract.address;
 const abi = [
   {
     constant: false,
@@ -102,6 +100,20 @@ const abi = [
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: true,
+    inputs: [{ name: 'ipfsMetadataHash', type: 'string' }],
+    name: 'fetchParallelKeyForIPFS',
+    outputs: [
+      { name: '', type: 'string' },
+      { name: '', type: 'uint256' },
+      { name: '', type: 'string' },
+      { name: '', type: 'uint256' },
+    ],
+    payable: false,
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -270,6 +282,6 @@ const abi = [
     type: 'event',
   },
 ];
-const lib_contract = new lib_web3.eth.Contract(abi, address, { gasPrice: 2000000000, gas: 600000 });
+const lib_reward_contract = new lib_web3.eth.Contract(abi, address, { gasPrice: CONFIG.ethereum.reward_contract.gasPrice, gas: CONFIG.ethereum.reward_contract.gas });
 
-export default lib_contract;
+export default lib_reward_contract;

@@ -1,5 +1,5 @@
-# FROM go-node:latest as builder
-FROM go11-node:latest
+# FROM blcksync/go-node:latest as builder
+FROM blcksync/go11-node:latest
 
 WORKDIR /root
 
@@ -74,17 +74,11 @@ RUN mkdir $HOME/bin && \
     bn.js@4.11.8 \
     secp256k1@3.4.0 \
     debug@3.1.0 \
-    ipfs-api@26.1.2 \
+    ipfs-http-client@28.1.0 \
     dat@13.10.0 \
     && ln -s $HOME/node_modules/dat/bin/cli.js $HOME/bin/dat
 
 EXPOSE 3000
 
-# Ports for Swarm TCP, Swarm uTP, API, Gateway, Swarm Websockets
-EXPOSE 4001
-EXPOSE 4002/udp
-EXPOSE 5001
-EXPOSE 8080
-EXPOSE 8081
 # Geth ports
 EXPOSE 8545 8546 30303 30303/udp

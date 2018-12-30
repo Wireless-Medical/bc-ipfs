@@ -1,4 +1,4 @@
-FROM go11-node:latest as builder
+FROM blcksync/go11-node:latest as builder
 
 ENV SHELL=/bin/bash \
     IPFS_USER=ipfsuser \
@@ -32,12 +32,17 @@ RUN addgroup -g $IPFS_GID $IPFS_USER && \
 # Install go-ipfs and gx
 RUN source /etc/profile.d/go_path.sh && \
     go get -u -d github.com/ipfs/go-ipfs && cd $GOPATH/src/github.com/ipfs/go-ipfs && \
+    git checkout fix/disable-keepalives && \
     make install_unsupported
 
 # Install geth
 RUN cd /root; \
     git clone -b release/1.8 --depth 1 https://github.com/matr1xc0in/go-ethereum.git && \
     cd /root/go-ethereum && make geth
+
+COPY bc-ipfs $HOME/bc-ipfs
+
+RUN chown -R $IPFS_UID:$IPFS_GID $HOME/bc-ipfs
 
 USER $IPFS_UID
 
@@ -50,23 +55,30 @@ RUN mkdir $HOME/bin && \
     bn.js@4.11.8 \
     secp256k1@3.4.0 \
     debug@3.1.0 \
-    ipfs-api@26.1.2 \
+    ipfs-http-client@28.1.0 \
     dat@13.10.0 \
     && ln -s $HOME/node_modules/dat/bin/cli.js $HOME/bin/dat ; \
-    cd $HOME; git clone --depth 1 -b $BUILD_BRANCH https://github.com/blcksync/bc-ipfs.git; \
-    cd bc-ipfs/bc-ipfs; npm install; \
-    npm install -S react@16.6.1 \
+    cd $HOME/bc-ipfs; \
+    npm install; \
+    npm install -S react@16.6.3 \
     @types/react@16.7.3 \
+    react-router-dom@4.3.1 \
     crypto-js@3.1.9-1 \
     ethereumjs-tx@1.3.7 \
-    ipfs-api@26.1.2 \
+    ipfs-http-client@28.1.0 \
     jquery@3.3.1 \
     js-sha256@0.9.0 \
     react-bootstrap@0.32.4 \
-    react-dom@16.6.1 \
+    react-dom@16.6.3 \
+    react-confirm-alert@2.0.7 \
+    react-hotjar@1.0.11 \
     url-parse@1.4.4 \
     web3@1.0.0-beta.36 \
     whatwg-fetch@3.0.0 \
+    config-webpack@1.0.4 \
+    config@1.30.0 \
+    bignumber.js@8.0.1 \
+    bootstrap@3.3.7 \
     && npm install -S @types/react-dom@16.0.9 \
     babel-core@6.26.3 \
     babel-loader@7.1.5 \
@@ -103,7 +115,7 @@ RUN apk update && apk upgrade && \
 COPY --from=builder /usr/local/go/bin/* /usr/local/go/bin/
 COPY --from=builder /go/bin/* /go/bin/
 COPY --from=builder /root/go-ethereum/build/bin/geth /usr/local/bin/
-COPY --from=builder $HOME/bc-ipfs/bc-ipfs $HOME/
+COPY --from=builder $HOME/bc-ipfs $HOME/
 
 # Install go-ipfs and gx
 RUN addgroup -g $IPFS_GID $IPFS_USER && \
@@ -126,15 +138,9 @@ WORKDIR $HOME
 
 COPY ./bin/*.sh $HOME/bin/
 
-CMD ["/home/ipfsuser/bin/launch.sh"]
+CMD ["npm start"]
 
 EXPOSE 3000
 
-# Ports for Swarm TCP, Swarm uTP, API, Gateway, Swarm Websockets
-EXPOSE 4001
-EXPOSE 4002/udp
-EXPOSE 5001
-EXPOSE 8080
-EXPOSE 8081
 # Geth ports
 EXPOSE 8545 8546 30303 30303/udp

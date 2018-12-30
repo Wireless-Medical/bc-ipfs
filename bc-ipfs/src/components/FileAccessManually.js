@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Form, Grid, Row, Col } from 'react-bootstrap';
+import { Button, Form, Grid, Row, Col, Image } from 'react-bootstrap';
 
 import lib_web3 from '../utils/lib_web3';
-import lib_contract from '../utils/lib_contract';
-import crypto_js from '../utils/lib_crypto';
+import lib_reward_contract from '../utils/lib_reward_contract';
+import { crypto_js, EncryptionVersion } from '../utils/lib_crypto';
 
 class FileAccessManually extends Component {
   constructor() {
@@ -51,7 +51,7 @@ class FileAccessManually extends Component {
     console.log('Accessing with metadata = ' + a_ipfsmeta + ' and encryptedTxt = ' + a_encrypted_hash);
     event.preventDefault();
 
-    const contract_address = lib_contract.options.address;
+    const contract_address = lib_reward_contract.options.address;
     console.log('Identified contract address = ' + contract_address);
     let submit_acct = '';
 
@@ -63,7 +63,7 @@ class FileAccessManually extends Component {
           console.log('Applying the first eth account[0]: ' + submit_acct + ' for contract ' + contract_address);
         })
         .then(() => {
-          lib_contract.methods
+          lib_reward_contract.methods
             .decryptIPFS(a_ipfsmeta)
             .send(
               {
@@ -81,7 +81,7 @@ class FileAccessManually extends Component {
             .then(() => {
               let realKey = '';
               let decryptIPFSHash = '';
-              lib_contract.methods
+              lib_reward_contract.methods
                 .fetchKeyForIPFS()
                 .call(
                   {
@@ -130,46 +130,52 @@ class FileAccessManually extends Component {
     return (
       <div className="App">
         <p align="left">
-        <b>Accessing Files</b>
+          <b>Accessing Files</b>
         </p>
         <p align="left">
-        <label>
+          <label>
             Enter ipfs Metadata Hash:
             <input
-            type="text"
-            name="access_ipfs_metadata"
-            placeholder="Enter your IPFS Metadata Hash here!"
-            size="40"
-            value={this.state.access_ipfs_metadata}
-            onChange={this.captureAccessInfo}
+              type="text"
+              name="access_ipfs_metadata"
+              placeholder="Enter your IPFS Metadata Hash here!"
+              size="40"
+              value={this.state.access_ipfs_metadata}
+              onChange={this.captureAccessInfo}
             />
-        </label>
+          </label>
         </p>
         <p align="left">
-        <label>
+          <label>
             Enter encrypted IPFS Hash:
             <input
-            type="text"
-            name="access_encrypted_hash"
-            placeholder="Enter the encrypted text here!"
-            size="40"
-            value={this.state.access_encrypted_hash}
-            onChange={this.captureAccessInfo}
+              type="text"
+              name="access_encrypted_hash"
+              placeholder="Enter the encrypted text here!"
+              size="40"
+              value={this.state.access_encrypted_hash}
+              onChange={this.captureAccessInfo}
             />
-        </label>
+          </label>
         </p>
         <Form onSubmit={this.accessBC}>
-        <p align="left">
+          <p align="left">
             <Button bsSize="xsmall" disabled={this.state.btn_access_disabled} bsStyle="primary" type="submit">
-            Access File on BlockChain
+              Access File on BlockChain
             </Button>
-        </p>
+            <Image
+              src="loading.gif"
+              height="50px"
+              width="50px"
+              style={{ display: !this.state.btn_access_disabled ? 'none' : 'inline' }}
+            />
+          </p>
         </Form>
         <p align="left">
-        <label>IPFS hash: </label>
-        <a href={'https://ipfs.io/ipfs/' + this.state.bc_resp_hash} target="_blank">
-            {'https://ipfs.io/ipfs/' + this.state.bc_resp_hash}
-        </a>
+          <label>IPFS hash: </label>
+          <a href={CONFIG.ipfs.gateway_url + this.state.bc_resp_hash} target="_blank">
+            {CONFIG.ipfs.gateway_url + this.state.bc_resp_hash}
+          </a>
         </p>
       </div>
     );

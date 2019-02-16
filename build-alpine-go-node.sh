@@ -1,10 +1,10 @@
 #!/bin/bash
 
 GO_VER=${GO_VER:-"11"}
-IMG_LABEL_TAG="blcksync/alpine-node"
+IMG_LABEL_TAG="alblockmed/alpine-node"
 
 echo "ok - building our own customized image "
-# Build base blcksync/alpine-node:latest image
+# Build base alblockmed/alpine-node:latest image
 docker build \
   --rm \
   -t $IMG_LABEL_TAG \

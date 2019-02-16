@@ -14,11 +14,11 @@ v8.14.0
 ```
 
 The following branches are locked for several purposes. This current `master` branch is the development branch
-and the current stable one is `encryption-v0.5.9`. All development should be based on `master` and refer to
-`encryption-v0.5.9` for now.
+and the current stable one is `encryption-v0.5.13`. All development should be based on `master` and refer to
+`encryption-v0.5.13` for now.
 
 * `master` - new for development including new features, etc.
-* `encryption-v0.5.9` - stable, tracks all history, bug fix
+* `encryption-v0.5.13` - stable, tracks all history, bug fix
 * `encryption-v0.4` - stable, tracks all history
 * `encryption-v0.3` - stable, and backport features and PR from master if necessary
 * `encryption-v0.2` - old, stable, only for old version and compatibility test.
@@ -35,7 +35,7 @@ and the current stable one is `encryption-v0.5.9`. All development should be bas
 brew install node
 # You can also download it from https://nodejs.org/en/
 # Run this project
-git clone -b master https://github.com/blcksync/bc-ipfs.git bc-ipfs
+git clone -b master https://github.com/BlockMedical/bc-ipfs.git bc-ipfs
 cd bc-ipfs
 cd bc-ipfs
 # Delete and re-install all modules, cleanup
@@ -51,7 +51,7 @@ npm test
 sudo su - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo su - apt-get install -y nodejs
 # Run this project
-git clone -b master https://github.com/blcksync/bc-ipfs.git bc-ipfs
+git clone -b master https://github.com/BlockMedical/bc-ipfs.git bc-ipfs
 cd bc-ipfs
 cd bc-ipfs
 # Delete and re-install all modules, cleanup
@@ -66,7 +66,7 @@ To build the docker images locally, run the following 2 in sequence.
 ```
 # Build alpine+nodejs and golang runtime based on alpine+nodejs image
 # To build go-lang 1.11.x (default we try to use the latest) with npm and nodejs
-# This produce an image with tag 'blcksync/alpine-node:latest' along with a
+# This produce an image with tag 'alblockmed/alpine-node:latest' along with a
 # go-lang 1.11.x image including npm
 GO_VER=11 ./build-alpine-go-node.sh
 # Build dev env with npm packages, ipfs, etc. and run it with run-dev.sh
@@ -86,12 +86,12 @@ GO_VER=11 ALPINE_IMAGE="mhart/alpine-node:base-10.8" ./build-go-node.sh
 ./build.sh
 ```
 
-To run the image `blcksync/bc-ipfs:<BRANCHNAME>`, just invoke `BUILD_BRANCH=<BRANCHNAME> run.sh`
+To run the image `alblockmed/bc-ipfs:<BRANCHNAME>`, just invoke `BUILD_BRANCH=<BRANCHNAME> run.sh`
 e.g.
 ```
 # <BRANCHNAME> is the tag/branch name, this example will try to run the docker
-# image blcksync/bc-ipfs:encryption-v0.5.9
-BRANCHNAME=encryption-v0.5.9 ./run.sh
+# image alblockmed/bc-ipfs:encryption-v0.5.13
+BRANCHNAME=encryption-v0.5.13 ./run.sh
 ```
 or to kick off the local dev image `bc-geth-ipfs-dev-11`, just invoke `run-dev.sh`.
 ```
@@ -125,8 +125,8 @@ env NODE_ENV=development npm install
 
 * Manual `ipfs` init and start has been **OBSOLETE**. We discourage running a local
 IPFS instance inside the same container of `bc-ipfs`.
-We have moved the IPFS node to its own docker container `blcksync/bc-ipfs:TAGs`.
-You can find them [here](https://hub.docker.com/r/blcksync/bc-ipfs-node).
+We have moved the IPFS node to its own docker container `alblockmed/bc-ipfs:TAGs`.
+You can find them [here](https://hub.docker.com/r/alblockmed/bc-ipfs-node).
 For those who still wants to run a local IPFS node, you can still run it, however,
 the ports are no longer exposed and you will need to manually expose them at runtime.
 e.g. `docker run --publish 5001:5001 --publish 8080:8080`.
@@ -170,7 +170,7 @@ docker run  \
   -p 4001:4001 \
   -p 8080:8080 \
   -p 5001:5001 \
-  blcksync/go-ipfs-insecure
+  alblockmed/go-ipfs-insecure
 ```
 
 The following grant access via `docker volume` to your local host filesystem to preserve
@@ -287,7 +287,7 @@ Running with specific environment in development or production mode.
 ```
 
 **Specific Image**
-This kicks off the publically avaialable (TBD) **blcksync/bc-ipfs**:`tag` image on
+This kicks off the publically avaialable (TBD) **alblockmed/bc-ipfs**:`tag` image on
 [dockerhub](https://hub.docker.com/). e.g. `master` branch. To run a different branch,
 use the `tag` as the branch name. Currently, we only release tags with branch name
 `master` or `encryption-vX.Y.Z` where `vX.Y.Z` is the `git tag` in this github repo.
@@ -297,7 +297,7 @@ docker run --rm -it \
   --publish 5001:5001 \
   --publish 8888:8080 \
   --env IPFS_PATH=/data/ipfs \
-  blcksync/bc-ipfs:master \
+  alblockmed/bc-ipfs:master \
   npm test
 ```
 Change command `npm test` to `npm start` for production.

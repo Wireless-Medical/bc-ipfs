@@ -5,7 +5,7 @@
   },
   "ipfs": {
     "api": {
-      "host": "ipfs-api.blcksync.info",
+      "host": "ipfs-api.blockmed.me",
       "port": "443",
       "protocol": "https"
     },
@@ -32,7 +32,7 @@
   },
   "es": {
     "search_url": {
-      "blockmed_ipfs": "https://es.blcksync.info/blockmed-ipfs/_search/template"
+      "blockmed_ipfs": "https://es.blockmed.me/blockmed-ipfs/_search/template"
     },
     "authorization": "Basic cmVhZGFsbDpyZWFkYWxs"
   }

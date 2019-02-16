@@ -1,4 +1,4 @@
-FROM blcksync/go11-node:latest as builder
+FROM alblockmed/go11-node:latest as builder
 
 ENV SHELL=/bin/bash \
     IPFS_USER=ipfsuser \
@@ -93,7 +93,7 @@ RUN mkdir $HOME/bin && \
     webpack-cli@3.1.2 \
     webpack-dev-server@3.1.10
 
-FROM blcksync/alpine-node:latest
+FROM alblockmed/alpine-node:latest
 
 LABEL maintainer="matr1xc0in"
 

@@ -7,9 +7,9 @@ if [ "$DEBUG" != "true" ] ; then
   build_cmd="docker build --no-cache"
 fi
 
-# Build base blcksync/alpine-node:latest image
+# Build base alblockmed/alpine-node:latest image
 $build_cmd \
   --rm \
-  -t blcksync/go-ipfs-insecure \
+  -t alblockmed/go-ipfs-insecure \
   --file Dockerfile.ipfs-insecure \
   .

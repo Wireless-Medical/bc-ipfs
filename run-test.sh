@@ -10,5 +10,5 @@ chmod -R 777 $IPFS_DIR
 
 docker run --rm -it \
   --publish 3000:3000 \
-  blcksync/bc-ipfs:${BUILD_BRANCH} \
+  alblockmed/bc-ipfs:${BUILD_BRANCH} \
   npm test

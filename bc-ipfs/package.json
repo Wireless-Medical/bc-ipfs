@@ -13,7 +13,7 @@
     "blockchain",
     "ethereum"
   ],
-  "author": "Andrew Lee <info@blcksync.com>",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "@types/react": "^16.7.3",

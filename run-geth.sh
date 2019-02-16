@@ -8,5 +8,5 @@ docker run --rm -it \
   --publish 127.0.0.1:8546:8546 \
   --mount type=bind,source=$CURR_DIR/bc-ipfs,target=/home/ipfsuser/bc-ipfs \
   --mount type=bind,source=$HOME/Library/Ethereum/testnet,target=/home/ipfsuser/.ethereum/testnet \
-  blcksync/bc-geth-ipfs-dev \
+  alblockmed/bc-geth-ipfs-dev \
   bash -l
